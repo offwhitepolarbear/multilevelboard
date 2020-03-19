@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+<style type="text/css">
+#phoneNumber {
+	width: 100%;
+}
+</style>
+<meta charset="UTF-8">
+<title>게시판 회원 가입</title>
+</head>
+<body>
+
+	<div class="container">
+		<hr>
+		<p>
+		<form id='registration' action='/user/addUser' method="post">
+			아이디 <input type="text" class="form-control" name='userId' id='userId'
+				maxlength='50' placeholder='사용하실 ID를 입력해주세요'>
+			<div id=underId></div>
+
+			이메일 <input type="text" class="form-control" name='email' id='email'
+				maxlength='50' placeholder='사용하시는 email을 입력해주세요'>
+			<div id='underEmail'></div>
+
+			비밀번호 <input type="password" class="form-control" name='password'
+				id='password' maxlength="16"
+				placeholder="영문/숫자/특수문자(키보드 상단 숫자키로 입력가능한 특수문자만 해당) 세가지 를 모두 포함한 8~16자리">
+			<div id='underPassword'></div>
+
+			비밀번호확인 <input type="password" class="form-control" name='password2'
+				id='password2' maxlength="16" placeholder="윗칸의 비밀번호와 동일하게 입력해주세요">
+			<div id='underPassword2'></div>
+
+			이름 <input type="text" class="form-control" name='name' id='name'
+				maxlength="20" placeholder="이름을 입력해주세요">
+			<div id='underName'></div>
+
+			닉네임 <input type="text" class="form-control" name='nickname'
+				id='nickname' maxlength="20" placeholder="사용하실 닉네임을 입력해주세요">
+			<div id='underNickname'></div>
+
+			전화번호
+			<div class="input-group" id='phoneNumber'>
+				<select class="custom-select custom-select" name='phoneHead'
+					id='phoneHead'>
+					<option value="010" selected>010</option>
+					<option value="011">011</option>
+					<option value="016">016</option>
+					<option value="017">017</option>
+					<option value="019">019</option>
+				</select> <input type="text" class="form-control" name='phoneBody'
+					id='phoneBody' maxlength='8'>
+			</div>
+			<div id='underPhoneNumber'></div>
+		</form>
+		<hr>
+		<button type="button" class="btn btn-outline-primary btn-lg btn-block"
+			id='registrationButton'>가입</button>
+	</div>
+
+</body>
+
+<script src="/js/lib/jquery.min.js"></script>
+<script src="/js/lib/popper.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+	var isEmailOk = false;
+	var isPasswordOk = false;
+	var isPassword2Ok = false;
+	var isNameOk = false;
+	var isNicknameOk = false;
+	var isPhoneBodyOk = false;
+	var isPhoneTailOk = false;
+
+	//가입버튼 클릭시 회원가입 입력양식form을 user/addUser로 포스트 전송
+	$("#registrationButton").click(
+			function() {
+				if (isEmailOk && isPasswordOk && isPassword2Ok && isNameOk
+						&& isNicknameOk && isPhoneBodyOk && isPhoneTailOk) {
+
+					var phoneNumberUnited = $('#phoneHead').val() + ""
+							+ $('#phoneBody').val();
+
+					var userData = {
+						userId : $('#userId').val(),
+						password : $('#password').val(),
+						email : $('#email').val(),
+						name : $('#name').val(),
+						nickname : $('#nickname').val(),
+						password : $('#password').val(),
+						phoneNumber : phoneNumberUnited,
+						content : $('#content').val()
+					};
+
+					userData = JSON.stringify(userData);
+					/*
+					 $.ajax({
+					 type: 'POST',
+					 url: '/addUser',
+					 dataType: 'json',
+					 contentType:'application/json; charset=utf-8',
+					 data: userData
+					 }).done(function() {
+					 alert('회원가입됨.');
+					 location.reload();
+					 }).fail(function (error) {
+					 alert('실패함');
+					 alert(error);
+					 });
+					 */
+
+					$.ajax({
+						headers : {
+							"Accept" : "application/json",
+							"Content-Type" : "application/json"
+						},
+						type : "POST",
+						url : "/addUser",
+						data : userData,
+						dataType : "text",
+						beforeSend : function() {
+						},
+						error : function(request, status, error) {
+							alert("통신에 실패하였습니다 다시시도해주세요");
+						},
+						success : function(data) {
+							alert("회원가입완료");
+
+						},
+						complete : function() {
+						}
+					});
+
+				} else {
+					alert("가입양식을 다시 한번 확인해주세요");
+				}
+			});
+
+	//이메일 유효성체크기능
+	$("#email")
+			.focusout(
+					function() {
+
+						isEmailOk = false;
+
+						var emailCheck = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+						var emailValue = $("#email").val();
+
+						if (emailCheck.test(emailValue)) {
+							isEmailOk = true;
+							$("#underEmail").empty();
+						}
+
+						if (!emailCheck.test(emailValue)) {
+							var emailTag = alertTagMaker("올바른 이메일 양식이 아닙니다.");
+							$("#underEmail").html(emailTag);
+						}
+
+					});
+
+	//비밀번호 유효성 체크기능
+	$("#password").focusout(function() {
+
+		// 숫자 /영어 /특수문자/ 모두 포함된 8~16자리 정규식
+		var passwordCheck = /^.*(?=^.{8,16}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
+		var passwordValue = $("#password").val()
+
+		if (!passwordCheck.test(passwordValue)) {
+			isPasswordOk = false;
+			var passwordTag = alertTagMaker("숫자/영어 /특수문자/세가지로 이루어진  8~16자리");
+			$("#underPassword").html(passwordTag);
+		}
+
+		if (passwordCheck.test(passwordValue)) {
+			isPasswordOk = true;
+			$("#underPassword").empty();
+		}
+
+		$("#password2").trigger("focusout");
+	});
+
+	//비밀번호 확인 체크기능
+	$("#password2").focusout(function() {
+
+		if ($("#password2").val() == $("#password").val()) {
+			isPassword2Ok = true;
+			$("#underPassword2").empty();
+		}
+
+		if ($("#password2").val() != $("#password").val()) {
+			isPassword2Ok = false;
+			var passwordTag = alertTagMaker("비밀번호 칸과 값이 동일하지 않습니다. 확인해주세요");
+			$("#underPassword2").html(passwordTag);
+		}
+	});
+
+	//이름 유효성 체크 부분
+	$("#name").focusout(function() {
+
+		// 한글 영문만 있으면 true
+		var checkKorEng = /^[가-힣|a-z|A-Z|\*]+$/
+		// 공백이 있으면 true
+		//var blank = /\s/;
+
+		var nameValue = $("#name").val();
+
+		if (checkKorEng.test(nameValue)) {
+			isNameOk = true;
+			$("#underName").empty();
+		}
+
+		if (!checkKorEng.test(nameValue)) {
+			isNameOk = false;
+			var nameTag = alertTagMaker("한글과 영문으로만 입력해주세요");
+			$("#underName").html(nameTag);
+		}
+
+	});
+
+	// 닉네임 유효성체크 및 경고메시지
+	$("#nickname").focusout(function() {
+
+		//공백이 있으면 true
+		var blank = /\s/;
+		var nicknameValue = $("#nickname").val();
+
+		if (blank.test(nicknameValue)) {
+			isNicknameOk = false;
+			var nickNameTag = alertTagMaker("공백문자는 사용하실 수 없습니다.")
+			$("#underNickname").html(nickNameTag);
+		}
+
+		if (!blank.test(nicknameValue)) {
+			isNicknameOk = true;
+			$("#underNickname").empty();
+		}
+	});
+
+	$("#phoneBody").focusout(function() {
+
+		//숫자만 7개 혹은 8개여야 true
+		var numberOnly = /^\d{7,8}$/;
+		var phoneBody = $("#phoneBody").val();
+
+		if (numberOnly.test(phoneBody)) {
+			isPhoneBodyOk = true;
+			$("#underPhoneNumber").empty();
+		}
+
+		if (!numberOnly.test(phoneBody)) {
+			isPhoneBodyOk = false;
+			var numberTag = alertTagMaker("전화번호를 올바르게 입력해주세요");
+			$("#underPhoneNumber").html(numberTag);
+		}
+
+	});
+
+	function alertTagMaker(tagMessage) {
+		var resultTag = "<div class='alert alert-danger' role='alert'>";
+		resultTag += tagMessage;
+		resultTag += "</div>"
+		return resultTag;
+	}
+</script>
+
+
+
+</html>

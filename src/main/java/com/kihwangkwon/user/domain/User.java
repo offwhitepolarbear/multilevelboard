@@ -25,7 +25,7 @@ public class User {
 	@Column(length = 20)
 	private String userId;
 	
-	@Column(length = 20)
+	@Column(length = 50)
 	private String password;
 	
 	@Column(length = 50)
@@ -38,7 +38,7 @@ public class User {
 	private String nickname;
 	
 	@Column(length = 11)
-	private int phoneNumber;
+	private String phoneNumber;
 	
 	@Column
 	private LocalDateTime createdDate;
@@ -47,7 +47,7 @@ public class User {
 	private String role;
 	
 	@Builder
-	public User(String userId, String password, String email, String name, String nickname, int phoneNumber, LocalDateTime createdDate, String role) {
+	public User(String userId, String password, String email, String name, String nickname, String phoneNumber, LocalDateTime createdDate, String role) {
 		this.userId = userId;
 		this.password = password;
 		this.email = email;

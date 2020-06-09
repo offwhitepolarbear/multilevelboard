@@ -97,21 +97,6 @@
 					};
 
 					userData = JSON.stringify(userData);
-					/*
-					 $.ajax({
-					 type: 'POST',
-					 url: '/addUser',
-					 dataType: 'json',
-					 contentType:'application/json; charset=utf-8',
-					 data: userData
-					 }).done(function() {
-					 alert('회원가입됨.');
-					 location.reload();
-					 }).fail(function (error) {
-					 alert('실패함');
-					 alert(error);
-					 });
-					 */
 
 					$.ajax({
 						headers : {

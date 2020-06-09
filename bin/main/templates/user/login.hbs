@@ -3,8 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+<link rel="stylesheet" href="/css/lib/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+	<div class='container'>
 	
+	<input type="text" name='id' id='userId' placeholder=""><i class="fa fa-user-o" aria-hidden="true"></i>
+	
+	
+	<input type="text" name='password' id='password' placeholder=""><i class="fa fa-key" aria-hidden="true"></i>
+	<button type="button" class="btn btn-primary" id='login'>로그인</button>
+	</div>
+	
+<script src="/js/lib/jquery.min.js"></script>
+<script src="/js/lib/popper.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
+<script type="text/javascript">
+$("#login").on('click', function(){
+	alert('로그인할래');
+});
+</script>
 </body>
 </html>

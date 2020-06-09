@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.type.LocalDateType;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +37,7 @@ public class User {
 	private String name;
 	
 	@Column(length = 50)
-	private String nickname;
+	private String nickName;
 	
 	@Column(length = 11)
 	private String phoneNumber;
@@ -47,14 +49,23 @@ public class User {
 	private String role;
 	
 	@Builder
-	public User(String userId, String password, String email, String name, String nickname, String phoneNumber, LocalDateTime createdDate, String role) {
+	public User(String userId, String password, String email, String name, String nickName, String phoneNumber, String role) {
 		this.userId = userId;
 		this.password = password;
 		this.email = email;
 		this.name = name;
-		this.nickname = nickname;
+		this.nickName = nickName;
 		this.phoneNumber = phoneNumber;
-		this.createdDate = createdDate;
+		this.createdDate = LocalDateTime.now();
 		this.role=role;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", email=" + email + ", name="
+				+ name + ", nickName=" + nickName + ", phoneNumber=" + phoneNumber + ", createdDate=" + createdDate
+				+ ", role=" + role + "]";
+	}
+	
+	
 }
